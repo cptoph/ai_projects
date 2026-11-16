@@ -1,0 +1,8 @@
+Flask>=3.0,<4
+waitress>=3.0,<4
+numpy>=1.26,<3
+aiohttp>=3.9,<4
+python-dotenv>=1.0,<2
+websockets>=12,<16
+scikit-learn>=1.4,<2
+tzdata>=2024.1

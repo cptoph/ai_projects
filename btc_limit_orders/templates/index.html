@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#090d12">
+    <title>BTC-USD Market Terminal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script defer src="{{ url_for('static', filename='dashboard.js') }}"></script>
+  </head>
+  <body>
+    <div class="terminal-shell">
+      <header class="terminal-header">
+        <a class="brand" href="/" aria-label="BTC-USD Market Terminal home">
+          <span class="brand-mark" aria-hidden="true">₿</span>
+          <span class="brand-copy">
+            <strong>BTC / USD</strong>
+            <small>MARKET INTELLIGENCE TERMINAL</small>
+          </span>
+        </a>
+        <div class="header-market">
+          <span class="instrument-tag">SPOT · COINBASE</span>
+          <span id="connection" class="connection status-waiting">
+            <span class="status-dot" aria-hidden="true"></span> CONNECTING
+          </span>
+        </div>
+        <nav class="terminal-nav" aria-label="Terminal controls">
+          <details class="menu-dropdown">
+            <summary>TOOLS <span aria-hidden="true">⌄</span></summary>
+            <button type="button" id="open-scenario-tool">Scenario likelihood</button>
+          </details>
+          <label for="model-select">MODEL</label>
+          <select id="model-select" aria-label="Forecast model">
+            <option value="local">LOCAL MODEL</option>
+            <option value="deepseek">DEEPSEEK API</option>
+          </select>
+        </nav>
+      </header>
+
+      <main class="content">
+        <section class="intro">
+          <div>
+            <p class="eyebrow">MARKET OVERVIEW <span> / </span> BTC-USD</p>
+            <h1>Digital asset monitor</h1>
+            <p class="intro-copy">Live market structure, short-horizon forecasts, and resolved outcomes.</p>
+          </div>
+          <div class="terminal-clock">
+            <span>NEW YORK TIME</span>
+            <strong id="clock">--:--:-- ET</strong>
+          </div>
+        </section>
+
+        <section class="card-grid" aria-label="Live market overview">
+          <article class="card price-card">
+            <div class="card-label"><span class="card-indicator"></span> SPOT PRICE</div>
+            <strong id="price-value">Waiting for Coinbase…</strong>
+            <small id="price-updated">No price update yet</small>
+          </article>
+          <article class="card forecast-card" id="forecast-card-60">
+            <div class="card-label">NEXT-MINUTE FORECAST</div>
+            <strong id="forecast-60">Warming up…</strong>
+            <small id="confidence-60">—</small>
+            <small id="forecast-note-60" class="forecast-note"></small>
+          </article>
+          <article class="card forecast-card" id="forecast-card-300">
+            <div class="card-label">5-MINUTE OUTLOOK</div>
+            <strong id="forecast-300">Warming up…</strong>
+            <small id="confidence-300">—</small>
+            <small id="forecast-note-300" class="forecast-note"></small>
+          </article>
+          <article class="card forecast-card" id="forecast-card-900">
+            <div class="card-label">15-MINUTE OUTLOOK</div>
+            <strong id="forecast-900">Warming up…</strong>
+            <small id="confidence-900">—</small>
+            <small id="forecast-note-900" class="forecast-note"></small>
+          </article>
+          <article class="card forecast-card" id="forecast-card-3600">
+            <div class="card-label">1-HOUR OUTLOOK</div>
+            <strong id="forecast-3600">Warming up…</strong>
+            <small id="confidence-3600">—</small>
+            <small id="forecast-note-3600" class="forecast-note"></small>
+          </article>
+          <article class="card network-card">
+            <div class="card-label">NETWORK / FEES</div>
+            <strong id="mempool-value">Loading…</strong>
+            <small id="fee-value">Fee estimates loading</small>
+          </article>
+        </section>
+
+        <section class="work-grid">
+          <div class="main-column">
+            <section class="panel price-panel">
+              <header class="panel-title chart-panel-title">
+                <div>
+                  <p class="eyebrow">LIVE MARKET DATA <span> / </span> COINBASE</p>
+                  <h2>BTC-USD price action</h2>
+                </div>
+                <div class="chart-controls">
+                  <label for="price-window">RANGE</label>
+                  <select id="price-window">
+                    <option value="300">5 MIN</option>
+                    <option value="900" selected>15 MIN</option>
+                    <option value="3600">1 HOUR</option>
+                  </select>
+                </div>
+              </header>
+              <div class="panel-body price-chart-body">
+                <div class="price-metrics" aria-label="Selected chart range statistics">
+                  <div><span>LAST</span><strong id="chart-last-price">—</strong></div>
+                  <div><span>RANGE CHANGE</span><strong id="price-change">—</strong></div>
+                  <div><span>HIGH</span><strong id="period-high">—</strong></div>
+                  <div><span>LOW</span><strong id="period-low">—</strong></div>
+                  <div><span>UPDATED</span><strong id="chart-updated">—</strong></div>
+                </div>
+                <div class="chart-scroll price-chart-scroll">
+                  <svg id="price-chart" role="img" aria-label="Live Bitcoin price chart"></svg>
+                </div>
+                <div class="chart-footnote">
+                  <span><i class="legend-line" aria-hidden="true"></i> BTC-USD spot</span>
+                  <span>All times Eastern · Coinbase live ticker</span>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <header class="panel-title">
+                <div>
+                  <p class="eyebrow">MODEL PERFORMANCE <span> / </span> HISTORICAL</p>
+                  <h2>Forecast outcomes</h2>
+                </div>
+                <div class="chart-controls">
+                  <label for="time-window">WINDOW</label>
+                  <select id="time-window">
+                    <option value="3600">1 HOUR</option>
+                    <option value="21600">6 HOURS</option>
+                    <option value="86400" selected>24 HOURS</option>
+                    <option value="604800">7 DAYS</option>
+                    <option value="2592000">30 DAYS</option>
+                    <option value="all">ALL</option>
+                  </select>
+                </div>
+              </header>
+              <div class="panel-body chart-body">
+                <div id="outcome-summary" class="muted">Loading resolved outcomes…</div>
+                <div class="chart-scroll">
+                  <svg id="outcome-chart" role="img" aria-label="Forecast outcome timeline"></svg>
+                </div>
+                <div class="legend">
+                  <span class="legend-item correct">■ Correct</span>
+                  <span class="legend-item missed">■ Miss</span>
+                  <span class="muted">Each bar spans forecast time to target time; lane shade identifies interval.</span>
+                </div>
+              </div>
+            </section>
+
+            <div class="split-grid">
+              <section class="panel">
+                <header class="panel-title"><h2>ROLLING FIVE-MINUTE SIGNALS</h2></header>
+                <div class="panel-body">
+                  <dl class="signal-grid">
+                    <dt>Transaction rate</dt><dd id="signal-tx-rate">—</dd>
+                    <dt>BTC moved</dt><dd id="signal-btc">—</dd>
+                    <dt>Whale moves (&gt;50 BTC)</dt><dd id="signal-whales">—</dd>
+                    <dt>Mempool trend</dt><dd id="signal-mempool">—</dd>
+                    <dt>Fastest fee pressure</dt><dd id="signal-fee">—</dd>
+                    <dt>Order-book imbalance</dt><dd id="signal-imbalance">—</dd>
+                  </dl>
+                </div>
+              </section>
+              <section class="panel">
+                <header class="panel-title">
+                  <h2>LIVE TRANSACTIONS</h2>
+                  <span class="muted">Select a row to open mempool.space</span>
+                </header>
+                <div class="panel-body scroll-area transaction-list" id="transactions">
+                  <div class="empty-state">Waiting for unconfirmed transactions…</div>
+                </div>
+              </section>
+            </div>
+
+            <div class="split-grid lower-grid">
+              <section class="panel">
+                <header class="panel-title"><h2>PREDICTION SCOREBOARD</h2></header>
+                <div class="panel-body">
+                  <div id="score-summary" class="muted">No resolved predictions yet</div>
+                  <div class="table-scroll">
+                    <table>
+                      <thead><tr><th>Time</th><th>Interval</th><th>Call</th><th>Forecast</th><th>Actual</th><th>Outcome</th></tr></thead>
+                      <tbody id="score-table"><tr><td colspan="6" class="empty-state">No resolved forecasts yet</td></tr></tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+              <section class="panel">
+                <header class="panel-title"><h2>PAPER TRADES · SIMULATION ONLY</h2></header>
+                <div class="panel-body">
+                  <form id="fee-form" class="fee-form">
+                    <label for="fee-bps">Estimated round-trip fees</label>
+                    <input id="fee-bps" type="number" min="0" max="2000" step="5" value="50">
+                    <span>bp</span>
+                    <button type="submit">Apply</button>
+                  </form>
+                  <div id="paper-summary" class="muted">Paper only · no broker orders</div>
+                  <div class="table-scroll">
+                    <table>
+                      <thead><tr><th>Horizon</th><th>State</th><th>Opened</th><th>Buy</th><th>Sell</th><th>Net P&amp;L</th></tr></thead>
+                      <tbody id="paper-table"><tr><td colspan="6" class="empty-state">No simulated trades yet</td></tr></tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <aside class="side-column">
+            <section class="panel">
+              <header class="panel-title">
+                <div>
+                  <p class="eyebrow">INTRADAY TRACK RECORD <span> / </span> ET</p>
+                  <h2>Today · 1-minute forecasts</h2>
+                </div>
+              </header>
+              <div class="panel-body">
+                <strong id="today-summary" class="today-summary">Loading today’s results…</strong>
+                <p id="today-accuracy" class="muted">Accuracy today: —</p>
+                <div class="table-scroll compact-table">
+                  <table>
+                    <thead><tr><th>Time</th><th>Call</th><th>Forecast → actual</th><th>Outcome</th></tr></thead>
+                    <tbody id="today-table"><tr><td colspan="4" class="empty-state">No resolved 1-minute forecasts today</td></tr></tbody>
+                  </table>
+                </div>
+                <p class="fine-print">One-minute direction is scored against the first observed BTC price at or after the target time.</p>
+              </div>
+            </section>
+
+            <section class="panel">
+              <header class="panel-title"><h2>DAILY TARGET · 5 PM ET</h2></header>
+              <div class="panel-body">
+                <strong id="daily-target" class="daily-target">Building estimate…</strong>
+                <p id="daily-detail" class="muted">Rough extrapolation from average realized local scoreboard returns.</p>
+                <p class="fine-print">Variable forecast horizon; highly approximate and not calibrated.</p>
+              </div>
+            </section>
+
+            <section class="panel">
+              <header class="panel-title"><h2>FEED STATUS</h2></header>
+              <div class="panel-body">
+                <ul id="feed-status" class="feed-status"><li>Waiting for feed updates…</li></ul>
+              </div>
+            </section>
+
+            <section class="panel robinhood-panel">
+              <header class="panel-title"><h2>ROBINHOOD PREDICTION MARKETS</h2></header>
+              <div class="panel-body">
+                <p class="muted">Sign in only on Robinhood’s official site. This app never handles credentials.</p>
+                <a class="button-link" href="https://robinhood.com/prediction-markets?category=6e58e4bd-23e4-4616-87a6-14e17f7e29aa" target="_blank" rel="noopener noreferrer">Open in browser</a>
+              </div>
+            </section>
+          </aside>
+        </section>
+
+        <div id="notice" class="notice" role="status" aria-live="polite"></div>
+        <dialog id="scenario-dialog" class="scenario-dialog">
+          <form id="scenario-form">
+            <header class="panel-title">
+              <div><p class="eyebrow">TOOLS <span> / </span> MARKET ANALYSIS</p><h2>Scenario likelihood</h2></div>
+              <button type="button" id="close-scenario-tool" aria-label="Close">×</button>
+            </header>
+            <div class="panel-body scenario-body">
+              <label for="scenario-datetime">Date and time (Eastern Time)</label>
+              <input id="scenario-datetime" type="datetime-local" required>
+              <label for="scenario-direction">BTC price condition</label>
+              <select id="scenario-direction">
+                <option value="above">Above or equal to</option>
+                <option value="below">Below or equal to</option>
+              </select>
+              <label for="scenario-price">BTC price in USD</label>
+              <input id="scenario-price" type="number" min="0.01" step="0.01" required>
+              <button type="submit">Calculate likelihood</button>
+              <p id="scenario-result" class="scenario-result" role="status" aria-live="polite">
+                Enter a future date, time, and BTC price.
+              </p>
+              <p class="fine-print">
+                A rough statistical estimate, not financial advice or a calibrated prediction.
+              </p>
+            </div>
+          </form>
+        </dialog>
+        <p class="disclaimer">Statistical estimates only — not financial advice. Live feeds can be delayed, incomplete, or unavailable. Paper trades are simulations and never place broker orders.</p>
+      </main>
+    </div>
+  </body>
+</html>

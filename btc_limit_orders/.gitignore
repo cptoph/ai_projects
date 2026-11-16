@@ -1,0 +1,8 @@
+.venv/
+.env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+btc_outlook.sqlite3
+btc_outlook.sqlite3-shm
+btc_outlook.sqlite3-wal
